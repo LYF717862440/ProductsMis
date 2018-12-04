@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>玉器商城</title>
+		<style type="text/css">
+			a{
+				text-decoration: none;
+				color: black;
+				display: inline-block;
+				text-align: center;
+			}
+			
+			#divyu{
+				width: 1300px;
+				height: 300px;
+				border: 1px solid black;
+				margin: 0 auto;
+			}
+			#divleft{
+				width: 70px;
+				height: 300px;
+				margin-left: 1%;
+				display: inline-block;
+				float: left;
+			}
+			#divright{
+				width: 1200px;
+				height: 300px;
+				display: inline-block;
+			}
+			#divright ul{
+				list-style: none;
+			}
+			#divright ul li{
+				display: inline;
+				/*margin: 0 0.4rem;*/
+				
+			}
+			#divright ul li a:checked{
+				background: #59A308;
+			}
+			.quanbuimg{
+				background-image: url(img/checked.jpg);
+				width: 80px;
+				height: 20px;
+				color: white;
+			}
+			.quanbuimg2{
+				background-image: url(img/checked.jpg);
+				width: 80px;
+				height: 20px;
+				color: white;
+			}
+			.price{
+				width:120px;
+				height: 20px;
+			}
+			.price1{
+				width:80px;
+				height: 20px;
+			}
+			.price2{
+				width:100px;
+				height: 20px;
+			}
+			.price5{
+				width:140px;
+				height: 18px;
+			}
+			.price6{
+				width:160px;
+				height: 20px;
+			}
+			.pinpai{
+				width:90px;
+				height: 20px;
+			}
+			.pinpai1{
+				width:60px;
+				height: 20px;
+			}
+			.color{
+				width:50px;
+				height: 20px;
+			}
+			.color1{
+				width:80px;
+				height: 20px;
+			}
+			.color2{
+				width:60px;
+				height: 20px;
+			}
+			#divproduct{
+				width: 1300px;
+				height: 2800px;
+				margin: 0 auto;
+				border: 1px solid black;
+				margin-top: 2%;
+			}
+			#divtop{
+				background: #59A308;
+				width: 1300px;
+				height: 40px;
+			}
+			#divtop_left{
+				display: inline-block;
+				float: left;
+				font-size: 22px;
+				color: white;
+			}
+			#divtop_right{
+				display: inline-block;
+				float: right;
+				font-size: 22px;
+				color: white;
+			}
+			#divproduct_nav{
+				width: 1260px;
+				height: 2720px;
+				margin: 0 auto;
+				margin-top: 1%;
+				position: relative;
+			}
+			#divproduct_nav_1{
+				width: 1260px;
+				height: 2720px;
+				text-align: center;
+				display: inline-block;
+			}
+			#div1{
+				display: inline-block;
+				font-size: 13px;
+				margin-right: 1%;
+				border: 1px solid black;
+				margin-bottom: 1%;
+			}
+			.span1{
+				color: #3A8E05;
+			}
+
+			.li{
+				background: #1155BB;
+				color: white;
+			}
+
+			.c_on{
+				color: #FFFFFF;
+				background: red;
+			}
+			.noall{
+				background-image: url(img/unchecked.jpg);
+				background-size: 100% 100%;
+			}
+		</style>
+
+		<script src="js/jquery-1.11.3.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+
+        $(function () {
+            listAll();
+            brandlist();
+            colorlist();
+            hangtypelist();
+            Icetypelist();
+            Inlaylist();
+            morallist();
+        });
+
+	//加载所有玉的信息
+	function listAll(){
+		$.ajax({
+			type: "get",
+			datetype:"json",
+            data:$("#formProducts").serialize(),
+			url:"ProductsServlet?action=ListAll",
+			beforeSend: function() { 	//请求前的事件
+				$("#loading").show(1000);
+			},
+			success: function(date){    //成功时调用
+                $("#divproduct_nav_1 div").remove();
+				//循环输出数据
+				$.each(date, function(i, obj) {
+					var div = $("<div id='div1' style='display: inline-block;float:left;'/>");
+					var pictures=$("<img src='img/"+obj.picture+"' style='width: 300px;height: 300px'/>");
+					$("<span/>").html(pictures).appendTo(div);
+					$("<br><span />").html(obj.name).appendTo(div);
+					$("<br><span style='text-decoration: line-through';color:#929397/>").html('￥'+obj.marketPrice+'元').appendTo(div);
+					$("  <span class='span1'/>").html('商城价：'+'￥'+obj.myprice+'元').appendTo(div);
+					$("#divproduct_nav_1").append(div);
+				});
+			},
+			complete: function() { //请求完成时的事件，不论成功或失败
+				$("#loading").hide(1000);
+			},
+			//监听错误
+			error:function (xhr, textStatus, errorThrown) {
+				alert(xhr+textStatus+errorThrown);
+			}
+		});
+	}
+
+
+	function listbycname(){
+		$(function () {
+			$.ajax({
+				type: "get",
+				datetype:"json",
+				url:"ProductsServlet?action=bycname",
+				beforeSend: function() { //请求前的事件
+					$("#loading").show(1000);
+				},
+				success: function(date){    //成功时调用
+					$("#divproduct_nav_1 div").remove();
+					//循环输出数据
+					$.each(date, function(i, obj) {
+						var div = $("<div id='div1' style='display: inline-block;float:left;'/>");
+						var pictures=$("<img src='img/"+obj.picture+"' style='width: 300px;height: 300px'/>");
+						$("<span/>").html(pictures).appendTo(div);
+						$("<br><span />").html(obj.name).appendTo(div);
+						$("<br><span style='text-decoration: line-through';color:#929397/>").html('￥'+obj.marketPrice+'元').appendTo(div);
+						$("  <span class='span1'/>").html('商城价：'+'￥'+obj.myprice+'元').appendTo(div);
+						$("#divproduct_nav_1").append(div);
+					});
+				},
+				complete: function() { //请求完成时的事件，不论成功或失败
+					$("#loading").hide(1000);
+				},
+				//监听错误
+				error:function (xhr, textStatus, errorThrown) {
+					alert(xhr+textStatus+errorThrown);
+				}
+			});
+		})
+	}
+
+
+	//图片切换
+	function c_onclick(obj){
+		$(".c_obj").eq($(obj).index()-1).addClass("c_on").siblings().removeClass("c_on");
+		$(".c_all1").addClass("noall");
+		listAll();
+	}
+	function c_allonclick(){
+		$(".c_obj").removeClass("c_on");
+		$(".c_all1").removeClass("noall");
+		listAll();
+	}
+	function b_onclick(obj){
+		$(".b_obj").eq($(obj).index()-1).addClass("c_on").siblings().removeClass("c_on");
+		$(".c_all3").addClass("noall");
+		var b_id=$("b_id").atter("value");
+		alert(b_id);
+		listAll();
+	}
+	function b_allonclick(){
+		$(".b_obj").removeClass("c_on");
+		$(".c_all3").removeClass("noall");
+		listAll();
+	}
+	function i_onclick(obj){
+		$(".c_obj").eq($(obj).index()-1).addClass("c_on").siblings().removeClass("c_on");
+		$(".c_all4").addClass("noall");
+		listAll();
+	}
+	function i_allonclick(){
+		$(".c_obj").removeClass("c_on");
+		$(".c_all4").removeClass("noall");
+		listAll();
+	}
+	function m_onclick(obj){
+		$(".c_obj").eq($(obj).index()-1).addClass("c_on").siblings().removeClass("c_on");
+		$(".c_all5").addClass("noall");
+		listAll();
+	}
+	function m_allonclick(){
+		$(".c_obj").removeClass("c_on");
+		$(".c_all5").removeClass("noall");
+		listAll();
+	}
+	function t_onclick(obj){
+		$(".c_obj").eq($(obj).index()-1).addClass("c_on").siblings().removeClass("c_on");
+		$(".c_all6").addClass("noall");
+		listAll();
+	}
+	function t_allonclick(){
+		$(".c_obj").removeClass("c_on");
+		$(".c_all6").removeClass("noall");
+		listAll();
+	}
+	function h_onclick(obj){
+		$(".c_obj").eq($(obj).index()-1).addClass("c_on").siblings().removeClass("c_on");
+		$(".c_all7").addClass("noall");
+		listAll();
+	}
+	function h_allonclick(){
+		$(".c_obj").removeClass("c_on");
+		$(".c_all7").removeClass("noall");
+		listAll();
+	}
+	function p_onclick(obj){
+		$(".c_obj").eq($(obj).index()-1).addClass("c_on").siblings().removeClass("c_on");
+		$(".c_all2").addClass("noall");
+		listAll();
+	}
+	function p_allonclick(){
+		$(".c_obj").removeClass("c_on");
+		$(".c_all2").removeClass("noall");
+		listAll();
+	}
+
+    //品牌
+	var brandlist=function () {
+		$.ajax({
+			type: "get",
+			datetype:"json",
+			url:"BrandServlet",
+            beforeSend: function() { //请求前的事件
+                $("#loading").show(1000);
+            },
+			success: function(date){    //成功时调用
+				//循环输出数据
+				$.each(date, function(i, obj) {
+					var li = $("<li></li>");
+                    $("<input type='button' value='"+obj.bid+"' id='b_id' name='b_id' data-bid='"+obj.bid+"' onclick='c_onclick()' class='color1'/>").val(obj.bname).appendTo(li);
+					$("#pingpai").append(li);
+                });
+			},
+            complete: function() { //请求完成时的事件，不论成功或失败
+                $("#loading").hide(1000);
+            },
+			error:function (xhr, textStatus, errorThrown) {
+				alert(xhr+textStatus+errorThrown);
+			}
+		});
+	};
+
+	//颜色
+	var colorlist=function () {
+		$.ajax({
+			type: "get",
+			datetype:"json",
+			url:"ColorServlet",
+			beforeSend: function() { 	//请求前的事件
+				$("#loading").show(1000);
+			},
+			success: function(date){    //成功时调用
+				//循环输出数据
+				$.each(date, function(i, obj) {
+					var li = $("<li></li>");
+                    $("<a href='#' onclick='c_onclick(this)' data-cid='"+obj.cid+"' name='c_id' id='c_id' class='color1'/>").html(obj.cname).appendTo(li);
+					$("#yanse").append(li);
+				});
+			},
+			complete: function() { //请求完成时的事件，不论成功或失败
+				$("#loading").hide(1000);
+			},
+			error:function (xhr, textStatus, errorThrown) {
+				alert(xhr+textStatus+errorThrown);
+			}
+		});
+	};
+
+	//挂件类型
+	var hangtypelist=function () {
+		$.ajax({
+			type: "get",
+			datetype:"json",
+			url:"HangtypeServlet",
+			beforeSend: function() { 	//请求前的事件
+				$("#loading").show(1000);
+			},
+			success: function(date){    //成功时调用
+				//循环输出数据
+				$.each(date, function(i, obj) {
+					var li = $("<li></li>");
+					$("<a href='#' data-hid='"+obj.hid+"' onclick='h_onclick(this)' class=\"color1\"/>").html(obj.hname).appendTo(li);
+					$("#guajian").append(li);
+				});
+			},
+			complete: function() { //请求完成时的事件，不论成功或失败
+				$("#loading").hide(1000);
+			},
+			error:function (xhr, textStatus, errorThrown) {
+				alert(xhr+textStatus+errorThrown);
+			}
+		});
+	};
+
+	//翡翠种地
+	var Icetypelist=function () {
+		$.ajax({
+			type: "get",
+			datetype:"json",
+			url:"IcetypeServlet",
+			beforeSend: function() { //请求前的事件
+				$("#loading").show(1000);
+			},
+			success: function(date){    //成功时调用
+				//循环输出数据
+				$.each(date, function(i, obj) {
+					var li = $("<li></li>");
+					$("<a href='#' data-iid='"+obj.tid+"' onclick='i_onclick(this)' class=\"color1\"/>").html(obj.tname).appendTo(li);
+					$("#bingzhong").append(li);
+				});
+			},
+			complete: function() { //请求完成时的事件，不论成功或失败
+				$("#loading").hide(1000);
+			},
+			error:function (xhr, textStatus, errorThrown) {
+				alert(xhr+textStatus+errorThrown);
+			}
+		});
+	};
+
+	//镶嵌
+	var Inlaylist=function () {
+		$.ajax({
+			type: "get",
+			datetype:"json",
+			url:"InlayServlet",
+			beforeSend: function() { //请求前的事件
+				$("#loading").show(1000);
+			},
+			success: function(date){    //成功时调用
+				//循环输出数据
+				$.each(date, function(i, obj) {
+					var li = $("<li></li>");
+					$("<a href='#' data-iid='"+obj.iid+"' onclick='m_onclick(this)' class=\"color1\"/>").html(obj.iname).appendTo(li);
+					$("#xiangqian").append(li);
+				});
+			},
+			complete: function() { //请求完成时的事件，不论成功或失败
+				$("#loading").hide(1000);
+			},
+			error:function (xhr, textStatus, errorThrown) {
+				alert(xhr+textStatus+errorThrown);
+			}
+		});
+	};
+
+	//寓意
+	var morallist=function () {
+		$.ajax({
+			type: "get",
+			datetype:"json",
+			url:"MoralServlet",
+			beforeSend: function() { //请求前的事件
+				$("#loading").show(1000);
+			},
+			success: function(date){    //成功时调用
+				//循环输出数据
+				$.each(date, function(i, obj) {
+					var li = $("<li></li>");
+					$("<a href='#' data-mid='mid' onclick='t_onclick(this)' class=\"color1\"/>").html(obj.mname).appendTo(li);
+					$("#yuyi").append(li);
+				});
+			},
+			complete: function() { //请求完成时的事件，不论成功或失败
+				$("#loading").hide(1000);
+			},
+			error:function (xhr, textStatus, errorThrown) {
+				alert(xhr+textStatus+errorThrown);
+			}
+		});
+	};
+
+
+
+		</script>
+	</head>
+	<body onload="">
+		<div id="divyu">
+			<div id="divleft">
+				<div id="divleft1">
+					<p><label>品牌:</label></p>
+					<p><label>价格:</label></p>
+					<p><label>翡翠颜色:</label></p>
+					<p><label>翡翠种地:</label></p>
+					<p><label>是否镶嵌:</label></p>
+					<p><label>翡翠寓意:</label></p>
+					<p><label>挂件类型:</label></p>
+				</div>
+				
+			</div>
+
+			<form id="formProducts" action="">
+			<div id="divright">
+				<p>
+					<ul id="pingpai">
+						<li ><a class="quanbuimg c_all1" onclick="c_allonclick()" name="c_all" id="all" href="#">全部</a></li>
+					</ul>
+				</p>
+				<p>
+					<ul>
+						<li><a class="quanbuimg c_all2" onclick="" name="all" href="#">全部</a></li>
+						<li><a class="price1" href="#">50-1000</a></li>
+						<li><a class="price2" href="#">1001-3000</a></li>
+						<li><a class="price" href="#">3001-10000</a></li>
+						<li><a class="price" href="#">10001-30000</a></li>
+						<li><a class="price5" href="#">30001-100000</a></li>
+						<li><a class="price6" href="#">100000-890000</a></li>
+					</ul>
+				</p>
+				<p>
+					<ul id="yanse">
+						<li><a class="quanbuimg c_all3" onclick="b_allonclick()" name="all" href="#">全部</a></li>
+					</ul>
+				</p>
+				<p>
+					<ul id="bingzhong">
+						<li><a class="quanbuimg c_all4" onclick="i_allonclick()" name="all" href="#">全部</a></li>
+
+					</ul>
+				</p>
+				<p>
+					<ul id="xiangqian">
+						<li><a class="quanbuimg c_all5" onclick="m_allonclick()" name="all" href="#">全部</a></li>
+
+					</ul>
+				</p>
+				<p>
+					<ul id="yuyi">
+						<li><a class="quanbuimg c_all6" onclick="t_allonclick()" name="all" href="#">全部</a></li>
+
+					</ul>
+				</p>
+				<p>
+					<ul id="guajian">
+						<li><a class="quanbuimg c_all7" onclick="h_allonclick()" name="all" href="#">全部</a></li>
+
+					</ul>
+				</p>
+			</div>
+			</form>
+
+			
+		</div>
+		
+		<div id="divproduct">
+			<div id="divtop">
+				<span id="divtop_left">
+					商品列表
+				</span>
+				<span id="divtop_right">
+					更多>>
+				</span>
+			</div>
+
+			<div id="divproduct_nav">
+				<div id="divproduct_nav_1">
+
+
+
+				</div>
+			</div>
+
+		</div>
+	</body>
+</html>

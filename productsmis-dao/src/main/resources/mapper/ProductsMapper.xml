@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liangyaofeng.dao.IProductsDao">
+
+    <select id="selectAllProducts" resultType="com.liangyaofeng.entity.Products">
+--         select id,`name`,cname,bname,iname,mname,tname,hname,MarketPrice,Myprice,Picture
+--         from products p,color c,brand b,inlay i,Moral m,Icetype t,hangtype h where c.cid=p.cid
+--         and p.bid=b.bid and i.iid=p.iid and m.mid=p.mid and t.tid=p.tid and h.hid=p.hid
+
+
+        select id,name,cid,bid,Iid,Mid,Tid,Hid,MarketPrice,Myprice,Picture from products
+        <where>
+            <if test="cid!=null and cid!=''">
+                cid=#{cid}
+            </if>
+            <if test="bid!=null and bid!=''">
+                and bid=#{bid}
+            </if>
+            <if test="iid!=null and iid!=''">
+                and iid=#{iid}
+            </if>
+            <if test="mid!=null and mid!=''">
+                and mid=#{mid}
+            </if>
+            <if test="tid!=null and tid!=''">
+                and tid=#{tid}
+            </if>
+            <if test="hid!=null and hid!=''">
+                and hid=#{hid}
+            </if>
+        </where>
+
+
+    </select>
+
+    <select id="selectBycname" resultType="com.liangyaofeng.entity.Products">
+        select id,name,cid,bid,Iid,Mid,Tid,Hid,MarketPrice,Myprice,Picture from products
+        where bid=#{param1} and cid=#{param2}
+    </select>
+
+    <select id="selectBybname" resultType="com.liangyaofeng.entity.Products">
+        select id,`name`,cname,bname,iname,mname,tname,hname,MarketPrice,Myprice,Picture
+        from products p,color c,brand b,inlay i,Moral m,Icetype t,hangtype h where c.cid=p.cid
+        and p.bid=b.bid and i.iid=p.iid and m.mid=p.mid and t.tid=p.tid and h.hid=p.hid
+    </select>
+
+
+</mapper>
